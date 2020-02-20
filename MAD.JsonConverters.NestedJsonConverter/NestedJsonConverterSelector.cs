@@ -4,7 +4,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Linq;
 
-namespace MAD.IntegrationFramework.Serialization
+namespace MAD.JsonConverters.Serialization
 {
     public class NestedJsonConverterSelector
     {

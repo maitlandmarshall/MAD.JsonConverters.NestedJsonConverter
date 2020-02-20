@@ -9,46 +9,24 @@ using Humanizer;
 using System.Linq;
 using System.Collections;
 using System.Text.RegularExpressions;
+using MAD.JsonConverters.NestedJsonConverterNS;
+using MAD.JsonConverters.Serialization;
 
-namespace MAD.IntegrationFramework.Serialization
+namespace MAD.JsonConverters.NestedJsonConverterNS
 {
     public class NestedJsonConverter : JsonConverter
     {
+        private readonly FlatDictionaryFactory flatDictionaryFactory = new FlatDictionaryFactory();
+        private readonly PathPascalizer pathPascalizer = new PathPascalizer();
+
         public override bool CanConvert(Type objectType)
         {
             return true;
         }
 
-        private string PascalizePath (string path)
-        {
-            string[] pathSplit = path.Split('.').Select(y => y.Pascalize()).ToArray();
-            string pascalizedPath = String.Join(".", pathSplit);
-
-            return pascalizedPath;
-        }
-
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            Dictionary<string, object> flattenedJson = new Dictionary<string, object>();
-
-            do
-            {
-                string path = this.PascalizePath(reader.Path);
-
-                switch (reader.TokenType)
-                {
-                    case JsonToken.Integer:
-                    case JsonToken.Float:
-                    case JsonToken.String:
-                    case JsonToken.Boolean:                        
-                    case JsonToken.Null:
-                    case JsonToken.Date:
-                    case JsonToken.Bytes:
-                        flattenedJson[path] = reader.Value;
-                        break;
-                }
-            }
-            while (reader.Read());
+            IDictionary<string, object> flattenedJson = this.flatDictionaryFactory.Create(reader);
 
             return this.ReadFlattenedJsonIntoTargetObjectType(flattenedJson, objectType);
         }
@@ -84,7 +62,7 @@ namespace MAD.IntegrationFramework.Serialization
                 if (jsonPropertyAttribute != null)
                 {
                     isJsonPropertyAttributeValueASelector = jsonPropertyAttribute.PropertyName.Split(',').Any(y => y == "{}" || y == "[]");
-                    flatJsonLookupKey = this.PascalizePath(jsonPropertyAttribute.PropertyName);
+                    flatJsonLookupKey = this.pathPascalizer.PascalizePath(jsonPropertyAttribute.PropertyName);
                 }
                 else
                 {
@@ -93,7 +71,7 @@ namespace MAD.IntegrationFramework.Serialization
                 }
 
                 if (jsonClassAttribute?.IsEnumerablePath == false)
-                    flatJsonLookupKey = $"{this.PascalizePath(jsonClassAttribute.Path)}.{flatJsonLookupKey}";
+                    flatJsonLookupKey = $"{this.pathPascalizer.PascalizePath(jsonClassAttribute.Path)}.{flatJsonLookupKey}";
 
                 string flatJsonLookupKeyParent;
 
@@ -174,7 +152,7 @@ namespace MAD.IntegrationFramework.Serialization
                 jsonClassAttribute = underlyingEnumerableType.GetCustomAttribute<JsonClassAttribute>();
 
             string jsonClassAttributePath = jsonClassAttribute?.Path ?? "";
-            jsonClassAttributePath = this.PascalizePath(jsonClassAttributePath);
+            jsonClassAttributePath = this.pathPascalizer.PascalizePath(jsonClassAttributePath);
 
             // Key all the keys which start with the JsonClassAttribute's path
             // And group them by the array index

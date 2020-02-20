@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>MAD.JsonConverters.NestedJsonConverter</AssemblyName>
+    <RootNamespace>MAD.JsonConverters.NestedJsonConverterNS</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MAD.IntegrationFramework.Serialization
+namespace MAD.JsonConverters.Serialization
 {
     public class JsonClassAttribute : Attribute
     {
