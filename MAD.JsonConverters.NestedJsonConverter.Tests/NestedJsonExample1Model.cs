@@ -7,10 +7,10 @@ namespace MAD.JsonConverters.NestedJsonConverterNS.Tests
 {
     public class NestedJsonExample1Model
     {
-        [JsonProperty("header.description")]
+        [NestedJsonProperty("header.description")]
         public string Description { get; set; }
 
-        [JsonProperty("header.isActive")]
+        [NestedJsonProperty("header.isActive")]
         public bool IsActive { get; set; }
 
         public List<string> Items { get; set; }

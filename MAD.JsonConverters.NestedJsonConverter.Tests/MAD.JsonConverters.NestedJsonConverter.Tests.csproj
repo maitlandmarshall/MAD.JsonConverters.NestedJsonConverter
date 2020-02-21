@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <RootNamespace>MAD.JsonConverters.NestedJsonConverterNS.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,6 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="NestedJsonExample2.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="NestedJsonExample1.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
