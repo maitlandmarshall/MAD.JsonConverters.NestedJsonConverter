@@ -18,7 +18,7 @@ namespace MAD.JsonConverters.NestedJsonConverterNS.Tests
         {
             this.nestedExample1Json = File.ReadAllText("NestedJsonExample1.js");
             this.nestedExample2Json = File.ReadAllText("NestedJsonExample2.js");
-            this.singleObjectAsNestedProperty = File.ReadAllText("SingleObjectAsNestedProperty.js");
+            this.singleObjectAsNestedProperty = File.ReadAllText("JsonWithAnObjectProperty.js");
         }
 
         [TestMethod]
@@ -42,9 +42,9 @@ namespace MAD.JsonConverters.NestedJsonConverterNS.Tests
         }
 
         [TestMethod]
-        public void ReadJson_SingleNestedObject_ArraysCSharpPropertyAdaptToSinglesInJson()
+        public void ReadJson_SingleNestedObject_StaticArrayHandlesSingleJsonObjects()
         {
-            SingleObjectAsNestedPropertyModel result = JsonConvert.DeserializeObject<SingleObjectAsNestedPropertyModel>(this.singleObjectAsNestedProperty, new NestedJsonConverter());
+            ModelWithAnArrayProperty result = JsonConvert.DeserializeObject<ModelWithAnArrayProperty>(this.singleObjectAsNestedProperty, new NestedJsonConverter());
 
             Assert.IsTrue(result.Invoices.First().InvoiceNumber == "101001");
         }

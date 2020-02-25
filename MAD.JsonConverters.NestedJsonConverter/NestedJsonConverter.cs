@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -62,13 +63,17 @@ namespace MAD.JsonConverters.NestedJsonConverterNS
 
                     object nestedValue;
 
+                    // If the JsonToken isn't an array, but the C# property is
+                    // Load the single object into the C# array
                     if (nestedToken.Type != JTokenType.Array
                      && typeof(IEnumerable<object>).IsAssignableFrom(p.PropertyType))
                     {
-                        IList<object> propInstance = Activator.CreateInstance(p.PropertyType) as IList<object>;
-                        propInstance.Add(nestedToken.ToObject(p.PropertyType.GetGenericArguments().FirstOrDefault()));
+                        IList collectionPropertyInstance = Activator.CreateInstance(p.PropertyType) as IList;
+                        object singlePropertyInstance = nestedToken.ToObject(p.PropertyType.GetGenericArguments().FirstOrDefault());
 
-                        nestedValue = propInstance;
+                        collectionPropertyInstance.Add(singlePropertyInstance);
+
+                        nestedValue = collectionPropertyInstance;
                     } 
                     else
                     {

@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="SingleObjectAsNestedProperty.js">
+    <None Update="JsonWithAnObjectProperty.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="NestedJsonExample2.js">

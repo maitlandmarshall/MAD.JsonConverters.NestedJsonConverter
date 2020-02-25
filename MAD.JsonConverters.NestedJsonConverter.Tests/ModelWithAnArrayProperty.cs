@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MAD.JsonConverters.NestedJsonConverterNS.Tests
 {
-    public class SingleObjectAsNestedPropertyModel
+    public class ModelWithAnArrayProperty
     {
         public List<Invoice> Invoices { get; set; }
     }

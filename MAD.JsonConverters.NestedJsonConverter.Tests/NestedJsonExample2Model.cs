@@ -1,4 +1,5 @@
 ﻿using MAD.JsonConverters.NestedJsonConverterNS;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,7 +14,7 @@ namespace MAD.JsonConverters.NestedJsonConverterNS.Tests
             public bool IsActive { get; set; }
         }
 
-        [NestedJsonProperty("details.header")]
+        [JsonProperty("details.header")]
         public HeaderModel Header { get; set; }
     }
 }
