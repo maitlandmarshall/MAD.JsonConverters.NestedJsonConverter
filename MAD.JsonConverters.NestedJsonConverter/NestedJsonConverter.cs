@@ -1,10 +1,8 @@
-﻿using Humanizer;
-using MAD.JsonConverters.Serialization;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 
@@ -24,35 +22,63 @@ namespace MAD.JsonConverters.NestedJsonConverterNS
 
             object result = Activator.CreateInstance(objectType);
 
+            IDictionary<string, string> mappedJsonKeysToClassKeys = new Dictionary<string, string>();
+            List<string> mappedProperties = new List<string>();
+
             foreach (PropertyInfo p in objectTypeProperties)
             {
-                NestedJsonPropertyAttribute nestedJsonPropertyAttribute = p.GetCustomAttribute<NestedJsonPropertyAttribute>();
+                JsonPropertyAttribute jsonPropertyAttribute = p.GetCustomAttribute<JsonPropertyAttribute>();
 
-                if (nestedJsonPropertyAttribute == null)
+                string jsonMappedPropName = jsonPropertyAttribute?.PropertyName ?? p.Name;
+
+                JToken nestedToken = readerObj;
+
+                foreach (string pathSegment in jsonMappedPropName.Split('.'))
                 {
-                    string key = (readerObj as IDictionary<string, JToken>)
-                        .Keys
-                        .FirstOrDefault(y => y.ToLower() == p.Name.ToLower());
+                    string key;
 
-                    // Don't do anything when you can't find a property.
-                    if (String.IsNullOrEmpty(key))
-                        continue;
-
-                    object value = readerObj[key].ToObject(p.PropertyType);
-
-                    p.SetValue(result, value);
-                }
-                else
-                {
-                    string propertyPath = nestedJsonPropertyAttribute.Path;
-                    JToken nestedToken = readerObj;
-
-                    foreach (string path in propertyPath.Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries))
+                    if (pathSegment != "*") 
                     {
-                        nestedToken = nestedToken[path];
+                        key = (readerObj as IDictionary<string, JToken>)
+                            .Keys
+                            .FirstOrDefault(y => y.ToLower() == jsonMappedPropName.ToLower());
+                    }
+                    else
+                    {
+                        key = (readerObj as IDictionary<string, JToken>)
+                             .Keys
+                             .FirstOrDefault(y => !mappedProperties.Contains(y));
                     }
 
-                    object nestedValue = nestedToken.ToObject(p.PropertyType);
+                    mappedProperties.Add(key);
+
+                    // Don't do anything when you can't find a property.
+                    if (string.IsNullOrEmpty(key))
+                    {
+                        break;
+                    }
+
+                    nestedToken = nestedToken[key];
+
+                    object nestedValue;
+
+                    if (nestedToken.Type != JTokenType.Array
+                     && typeof(IEnumerable<object>).IsAssignableFrom(p.PropertyType))
+                    {
+                        IList<object> propInstance = Activator.CreateInstance(p.PropertyType) as IList<object>;
+                        propInstance.Add(nestedToken.ToObject(p.PropertyType.GetGenericArguments().FirstOrDefault()));
+
+                        nestedValue = propInstance;
+                    } 
+                    else
+                    {
+                        if (nestedToken.Type == JTokenType.Null)
+                            continue;
+                        else
+                            nestedValue = nestedToken.ToObject(p.PropertyType);
+                    }
+
+                    
                     p.SetValue(result, nestedValue);
                 }
             }

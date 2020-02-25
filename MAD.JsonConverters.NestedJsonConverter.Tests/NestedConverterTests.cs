@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System.IO;
+using System.Linq;
 
 namespace MAD.JsonConverters.NestedJsonConverterNS.Tests
 {
@@ -10,11 +11,14 @@ namespace MAD.JsonConverters.NestedJsonConverterNS.Tests
         private string nestedExample1Json;
         private string nestedExample2Json;
 
+        private string singleObjectAsNestedProperty;
+
         [TestInitialize]
         public void Init()
         {
             this.nestedExample1Json = File.ReadAllText("NestedJsonExample1.js");
             this.nestedExample2Json = File.ReadAllText("NestedJsonExample2.js");
+            this.singleObjectAsNestedProperty = File.ReadAllText("SingleObjectAsNestedProperty.js");
         }
 
         [TestMethod]
@@ -35,6 +39,14 @@ namespace MAD.JsonConverters.NestedJsonConverterNS.Tests
             Assert.IsNotNull(result.Header);
             Assert.IsTrue(result.Header.Description == "steak is gr8");
             Assert.IsTrue(result.Header.IsActive);
+        }
+
+        [TestMethod]
+        public void ReadJson_SingleNestedObject_ArraysCSharpPropertyAdaptToSinglesInJson()
+        {
+            SingleObjectAsNestedPropertyModel result = JsonConvert.DeserializeObject<SingleObjectAsNestedPropertyModel>(this.singleObjectAsNestedProperty, new NestedJsonConverter());
+
+            Assert.IsTrue(result.Invoices.First().InvoiceNumber == "101001");
         }
     }
 }
