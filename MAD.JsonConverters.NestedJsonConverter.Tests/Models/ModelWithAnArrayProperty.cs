@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MAD.JsonConverters.NestedJsonConverterNS.Tests
+namespace MAD.JsonConverters.NestedJsonConverterNS.Tests.Models
 {
     public class ModelWithAnArrayProperty
     {

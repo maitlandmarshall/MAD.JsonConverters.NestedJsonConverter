@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using MAD.JsonConverters.NestedJsonConverterNS.Tests.Models;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
@@ -42,11 +43,45 @@ namespace MAD.JsonConverters.NestedJsonConverterNS.Tests
         }
 
         [TestMethod]
-        public void ReadJson_SingleNestedObject_StaticArrayHandlesSingleJsonObjects()
+        public void ReadJson_SingleNestedObject_CSharpArrayHandlesSingleJsonObjects()
         {
             ModelWithAnArrayProperty result = JsonConvert.DeserializeObject<ModelWithAnArrayProperty>(this.singleObjectAsNestedProperty, new NestedJsonConverter());
 
             Assert.IsTrue(result.Invoices.First().InvoiceNumber == "101001");
+        }
+
+        [TestMethod]
+        public void ReadJson_DynamicKeyInJson_JsonPropertyWithStarOperatorMatches()
+        {
+            string json =
+@"{
+    responseCode: 1337,
+    randomKeyForSomeStupidReason: ['smell me donkey bitch'],
+    iLikeClams: true
+}";
+
+            DynamicResponseFromSomeShittyApiModel<string[]> model = 
+                JsonConvert.DeserializeObject<DynamicResponseFromSomeShittyApiModel<string[]>>(json, new NestedJsonConverter());
+
+            Assert.AreEqual(model.ResponseCode, 1337);
+            CollectionAssert.Contains(model.Result, "smell me donkey bitch");
+            Assert.IsTrue(model.ILikeClams);
+        }
+
+        [TestMethod]
+        public void ReadJson_MultipleWildcardsInModel_ThrowsException()
+        {
+            string json =
+@"{
+    minions: ['jerry', 'rick'],
+    plebs: ['smegma']
+}";
+
+            Assert.ThrowsException<JsonSerializationException>(() =>
+            {
+                MultipleWildcardModel model =
+                JsonConvert.DeserializeObject<MultipleWildcardModel>(json, new NestedJsonConverter());
+            });
         }
     }
 }
