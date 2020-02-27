@@ -42,7 +42,7 @@ NestedJsonExample2Model result = JsonConvert.DeserializeObject<NestedJsonExample
 ```
 Or simply mark your class with the JsonConverter attribute and DeserializeObject will automatically use it.
 ```cs
-[JsonConverter(typeof(NestedJsonConverter))
+[JsonConverter(typeof(NestedJsonConverter))]
 public class NestedJsonExample2Model
 {
     public class HeaderModel
