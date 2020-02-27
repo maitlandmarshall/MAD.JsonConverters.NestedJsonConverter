@@ -12,6 +12,8 @@
     <RepositoryUrl>https://github.com/maitlandmarshall/MAD.JsonConverters.NestedJsonConverter</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>nested json converter path selector</PackageTags>
+    <Version>1.0.1</Version>
+    <PackageReleaseNotes>Small bug fix.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

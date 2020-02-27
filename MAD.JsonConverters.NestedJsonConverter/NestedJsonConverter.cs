@@ -58,11 +58,11 @@ namespace MAD.JsonConverters.NestedJsonConverterNS
                              .FirstOrDefault(y => !mappedProperties.Contains(y, StringComparer.OrdinalIgnoreCase));
                     }
 
-                    nestedToken = nestedToken.Value<JToken>(key);
+                    nestedToken = nestedToken.Value<JToken>(key ?? "");
                 }
 
                 if (nestedToken is null)
-                    break;
+                    continue;
 
                 mappedProperties.Add(jsonMappedPropName);
 
