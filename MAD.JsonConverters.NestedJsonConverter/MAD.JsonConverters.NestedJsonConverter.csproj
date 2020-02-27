@@ -4,10 +4,17 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>MAD.JsonConverters.NestedJsonConverter</AssemblyName>
     <RootNamespace>MAD.JsonConverters.NestedJsonConverterNS</RootNamespace>
+    <Authors>Maitland Marshall</Authors>
+    <Company>Maitland's App Development</Company>
+    <Product />
+    <Description>Allows use of paths with the JsonPropertyAttribute. Now you can deserialize a nested object more easily.</Description>
+    <PackageProjectUrl>https://github.com/maitlandmarshall/MAD.JsonConverters.NestedJsonConverter</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/maitlandmarshall/MAD.JsonConverters.NestedJsonConverter</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>nested json converter path selector</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Humanizer" Version="2.7.9" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
