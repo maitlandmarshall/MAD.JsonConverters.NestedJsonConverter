@@ -12,8 +12,8 @@
     <RepositoryUrl>https://github.com/maitlandmarshall/MAD.JsonConverters.NestedJsonConverter</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>nested json converter path selector</PackageTags>
-    <Version>1.0.1</Version>
-    <PackageReleaseNotes>Small bug fix.</PackageReleaseNotes>
+    <Version>1.0.2</Version>
+    <PackageReleaseNotes>Fix for when deserializing nested null values.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

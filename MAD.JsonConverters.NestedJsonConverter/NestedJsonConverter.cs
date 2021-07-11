@@ -23,7 +23,7 @@ namespace MAD.JsonConverters.NestedJsonConverterNS
             JObject readerObj = JObject.Load(reader);
 
             IEnumerable<PropertyInfo> objectTypeProperties = objectType
-                .GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 // OrderBy anything with * so it appears last. Otherwise the wildcard operator will find an already mapped property.
                 .OrderBy(y => y.GetCustomAttribute<JsonPropertyAttribute>()?.PropertyName == "*");
 
@@ -33,7 +33,7 @@ namespace MAD.JsonConverters.NestedJsonConverterNS
 
             foreach (PropertyInfo p in objectTypeProperties)
             {
-                JsonPropertyAttribute jsonPropertyAttribute = p.GetCustomAttribute<JsonPropertyAttribute>();
+                JsonPropertyAttribute jsonPropertyAttribute = p.GetCustomAttribute<JsonPropertyAttribute>(true);
 
                 string jsonMappedPropName = jsonPropertyAttribute?.PropertyName ?? p.Name;
 
@@ -42,7 +42,8 @@ namespace MAD.JsonConverters.NestedJsonConverterNS
 
                 foreach (string pathSegment in jsonMappedPropName.Split('.'))
                 {
-                    if (nestedToken is null)
+                    if (nestedToken is null
+                        || !nestedToken.HasValues)
                         break;
 
                     if (pathSegment != "*")
