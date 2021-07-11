@@ -32,7 +32,7 @@ string json =
 @"{
     details: {
         header: {
-            description: "steak is gr8",
+            description: ""steak is gr8"",
             isActive: true
         }
     }
